@@ -2,34 +2,81 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
 <meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#EFE9DF">
 <title>.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root { --ink:#1d1d1b; --muted:#8a8780; --line:#e7e4de; --paper:#fbfaf7; --accent:#E8743B; }
-  html,body { margin:0; height:100%; background:var(--paper); color:var(--ink);
-    font:15px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
-  #gate { min-height:100%; display:flex; align-items:center; justify-content:center; padding:24px; box-sizing:border-box; }
-  .card { width:100%; max-width:320px; text-align:center; }
-  .mark { font-size:13px; letter-spacing:.35em; text-transform:lowercase; color:var(--muted); margin-bottom:28px; }
-  .mark b { color:var(--accent); font-weight:600; }
-  button.g { width:100%; padding:12px 16px; border:1px solid var(--line); background:#fff; border-radius:10px;
-    font:inherit; cursor:pointer; display:flex; gap:10px; align-items:center; justify-content:center; }
-  button.g:hover { border-color:#cfcac1; }
-  .msg { margin-top:16px; font-size:13px; color:var(--muted); min-height:1.4em; }
-  .err { color:#b4432a; }
+  :root{--ink:#18212A;--muted:#6f7a80;--sand:#EFE9DF;--teal:#2C8C8E;--terra:#C4693F;
+    --glass:rgba(255,255,255,.52);--glass-hi:rgba(255,255,255,.78);--edge:rgba(255,255,255,.75)}
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%;background:var(--sand);color:var(--ink);
+    font:15px/1.45 Archivo,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  .field{position:fixed;inset:0;overflow:hidden;z-index:0;pointer-events:none}
+  .blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55;will-change:transform}
+  .b1{width:52vmax;height:52vmax;background:var(--teal);left:-14vmax;top:-18vmax;animation:d1 26s ease-in-out infinite alternate}
+  .b2{width:44vmax;height:44vmax;background:var(--terra);right:-14vmax;bottom:-16vmax;animation:d2 30s ease-in-out infinite alternate}
+  .b3{width:26vmax;height:26vmax;background:#fff;left:40%;top:30%;opacity:.7;animation:d3 22s ease-in-out infinite alternate}
+  @keyframes d1{to{transform:translate(12vmax,10vmax) scale(1.08)}}
+  @keyframes d2{to{transform:translate(-10vmax,-12vmax) scale(1.1)}}
+  @keyframes d3{to{transform:translate(-14vmax,8vmax) scale(.9)}}
+  @media (prefers-reduced-motion:reduce){.blob{animation:none}}
+  #gate{position:relative;z-index:1;min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:24px}
+  .glass{background:linear-gradient(160deg,var(--glass-hi),var(--glass));backdrop-filter:blur(22px) saturate(170%);
+    -webkit-backdrop-filter:blur(22px) saturate(170%);border:1px solid var(--edge);
+    box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 24px 60px -24px rgba(24,33,42,.35)}
+  .card{width:100%;max-width:340px;border-radius:22px;padding:30px 26px 22px;text-align:center}
+  .mark{font:500 11px/1 "IBM Plex Mono",ui-monospace,Menlo,monospace;letter-spacing:.5em;text-indent:.5em;color:var(--ink);opacity:.7;margin:0 0 26px}
+  .mark i{font-style:normal;color:var(--terra)}
+  .btn{width:100%;height:46px;border-radius:12px;border:1px solid var(--edge);background:rgba(255,255,255,.6);
+    font:500 14.5px Archivo,sans-serif;color:var(--ink);cursor:pointer;display:flex;gap:10px;align-items:center;justify-content:center;
+    transition:background .2s,transform .1s}
+  .btn:hover{background:rgba(255,255,255,.85)}.btn:active{transform:scale(.99)}
+  .btn.go{background:var(--ink);color:#fff;border-color:var(--ink)}.btn.go:hover{background:#26323d}
+  .btn:disabled{opacity:.5;cursor:default}
+  .or{display:flex;align-items:center;gap:12px;margin:18px 0;font:400 10px "IBM Plex Mono",monospace;letter-spacing:.3em;color:var(--muted)}
+  .or:before,.or:after{content:"";flex:1;height:1px;background:rgba(24,33,42,.12)}
+  input.in{width:100%;height:46px;border-radius:12px;border:1px solid var(--edge);background:rgba(255,255,255,.5);
+    padding:0 14px;font:15px Archivo,sans-serif;color:var(--ink);outline:none;margin-bottom:10px;transition:border-color .2s,background .2s}
+  input.in:focus{border-color:var(--teal);background:rgba(255,255,255,.8)}
+  .code{display:flex;gap:7px;justify-content:center;margin:4px 0 12px}
+  .code input{width:40px;height:50px;border-radius:12px;border:1px solid var(--edge);background:rgba(255,255,255,.55);
+    text-align:center;font:500 20px "IBM Plex Mono",monospace;color:var(--ink);outline:none}
+  .code input:focus{border-color:var(--teal);background:rgba(255,255,255,.85)}
+  .hint{font-size:13px;color:var(--muted);margin:0 0 14px}
+  .msg{margin-top:14px;font-size:12.5px;color:var(--muted);min-height:1.3em}.msg.err{color:var(--terra)}
+  .link{background:none;border:0;padding:0;font:inherit;font-size:12.5px;color:var(--muted);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+  .row{display:flex;justify-content:space-between;margin-top:12px}
+  [hidden]{display:none!important}
 </style>
 </head>
 <body>
+<div class="field" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
 <div id="gate">
-  <div class="card">
-    <div class="mark">l<b>o</b>ft</div>
-    <button class="g" id="signin" type="button">
-      <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
-      Continue with Google
-    </button>
-    <div class="msg" id="msg"></div>
+  <div class="card glass">
+    <p class="mark">l<i>o</i>ft</p>
+    <div id="s1">
+      <button class="btn" id="g" type="button">
+        <svg width="17" height="17" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
+        Continue with Google
+      </button>
+      <div class="or">OR</div>
+      <form id="ef" novalidate>
+        <input class="in" id="em" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="name@ydsarch.com" aria-label="Email">
+        <button class="btn go" id="send" type="submit">Email me a code</button>
+      </form>
+    </div>
+    <div id="s2" hidden>
+      <p class="hint" id="sent">Check your inbox.</p>
+      <div class="code" id="code"></div>
+      <button class="btn go" id="verify" type="button">Sign in</button>
+      <div class="row"><button class="link" id="back" type="button">Different email</button><button class="link" id="again" type="button">Resend</button></div>
+    </div>
+    <div class="msg" id="msg" role="status" aria-live="polite"></div>
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"
@@ -38,57 +85,97 @@
 (function () {
   var SB_URL = 'https://wuqalbzcoadmerfyoufn.supabase.co';
   var KEY = 'sb_publishable_nzoPPaTQ-lsFtolMA4Q2-A_1_5JbXBW';
-  var msg = document.getElementById('msg');
-  function say(t, bad) { msg.textContent = t; msg.className = 'msg' + (bad ? ' err' : ''); }
+  function $(id) { return document.getElementById(id); }
+  var msg = $('msg');
+  function say(t, bad) { msg.textContent = t || ''; msg.className = 'msg' + (bad ? ' err' : ''); }
   function yds(e) { return /^[a-z0-9._%+'-]+@ydsarch\.com$/i.test(e || ''); }
-
   if (!window.supabase) { say('Could not load. Check your connection and refresh.', true); return; }
   var sb = window.supabase.createClient(SB_URL, KEY, {
     auth: { flowType: 'pkce', persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
   });
   window.__loft = { sb: sb };
 
-  document.getElementById('signin').onclick = function () {
+  // ---- Google ----
+  $('g').onclick = function () {
     say('Opening Google…');
-    sb.auth.signInWithOAuth({
-      provider: 'google',
+    sb.auth.signInWithOAuth({ provider: 'google',
       options: { redirectTo: location.origin + location.pathname, queryParams: { hd: 'ydsarch.com', prompt: 'select_account' } }
     }).then(function (r) { if (r.error) say(r.error.message, true); });
   };
 
+  // ---- Email code ----
+  var email = '', cooldown = 0, cdTimer;
+  var boxes = [];
+  (function buildCode() {
+    var wrap = $('code');
+    for (var i = 0; i < 6; i++) {
+      var b = document.createElement('input');
+      b.inputMode = 'numeric'; b.autocomplete = i === 0 ? 'one-time-code' : 'off'; b.maxLength = 6; b.setAttribute('aria-label', 'Digit ' + (i + 1));
+      (function (idx, el) {
+        el.addEventListener('input', function () {
+          var v = el.value.replace(/\D/g, '');
+          if (v.length > 1) { fill(v); return; }               // pasted or autofilled the whole code
+          el.value = v; if (v && idx < 5) boxes[idx + 1].focus();
+          if (codeValue().length === 6) verify();
+        });
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Backspace' && !el.value && idx > 0) { boxes[idx - 1].focus(); boxes[idx - 1].value = ''; }
+          if (e.key === 'Enter') verify();
+        });
+      })(i, b);
+      boxes.push(b); wrap.appendChild(b);
+    }
+  })();
+  function fill(v) { v = v.slice(0, 6); for (var i = 0; i < 6; i++) boxes[i].value = v[i] || ''; boxes[Math.min(v.length, 5)].focus(); if (v.length === 6) verify(); }
+  function codeValue() { return boxes.map(function (b) { return b.value; }).join(''); }
+  function tick() {
+    var a = $('again'); if (cooldown > 0) { a.disabled = true; a.textContent = 'Resend in ' + cooldown + 's'; cooldown--; cdTimer = setTimeout(tick, 1000); }
+    else { a.disabled = false; a.textContent = 'Resend'; }
+  }
+  async function sendCode() {
+    var e = $('em').value.trim().toLowerCase();
+    if (!yds(e)) { say('Use your @ydsarch.com email.', true); $('em').focus(); return; }
+    var btn = $('send'); btn.disabled = true; say('Sending…');
+    var r = await sb.auth.signInWithOtp({ email: e, options: { shouldCreateUser: true, emailRedirectTo: location.origin + location.pathname } });
+    btn.disabled = false;
+    if (r.error) { say(/rate|seconds/i.test(r.error.message) ? 'Please wait a minute, then try again.' : 'Could not send the code. Try Google instead.', true); return; }
+    email = e; $('s1').hidden = true; $('s2').hidden = false; say('');
+    $('sent').textContent = 'Check ' + e + '. Open the link on this device, or type the code here.';
+    boxes.forEach(function (b) { b.value = ''; }); boxes[0].focus();
+    clearTimeout(cdTimer); cooldown = 60; tick();
+  }
+  var verifying = false;
+  async function verify() {
+    var c = codeValue(); if (c.length !== 6 || verifying) return;
+    verifying = true; $('verify').disabled = true; say('Checking…');
+    var r = await sb.auth.verifyOtp({ email: email, token: c, type: 'email' });
+    verifying = false; $('verify').disabled = false;
+    if (r.error) { say('That code didn’t work. Check it or resend.', true); boxes.forEach(function (b) { b.value = ''; }); boxes[0].focus(); }
+  }
+  $('ef').onsubmit = function (e) { e.preventDefault(); sendCode(); };
+  $('verify').onclick = verify;
+  $('again').onclick = function () { $('em').value = email; sendCode(); };
+  $('back').onclick = function () { $('s2').hidden = true; $('s1').hidden = false; say(''); clearTimeout(cdTimer); $('em').focus(); };
+
+  // ---- Session → load the app (handed out only to confirmed YDS accounts by the database) ----
   var started = false, rejected = false;
   async function boot(session) {
     if (!session || started) return;
-    if (!yds(session.user && session.user.email)) {
-      rejected = true;
-      await sb.auth.signOut();
-      say('That account is not part of YDS.', true);
-      return;
-    }
-    started = true;
-    say('Loading…');
-    // The app itself is only handed out to signed-in YDS accounts (enforced by the database).
+    if (!yds(session.user && session.user.email)) { rejected = true; await sb.auth.signOut(); say('That account is not part of YDS.', true); return; }
+    started = true; say('Opening…');
     var r = await sb.rpc('get_app_bundle', { p_name: 'portal' });
     if (r.error || !r.data) { started = false; say('Access denied.', true); return; }
-    var blob = new Blob([r.data], { type: 'text/javascript' });
     var s = document.createElement('script');
-    s.src = URL_create(blob);
-    s.onload = function () { URL_revoke(s.src); };
+    s.src = window.URL.createObjectURL(new Blob([r.data], { type: 'text/javascript' }));
+    s.onload = function () { try { window.URL.revokeObjectURL(s.src); } catch (e) {} };
     document.body.appendChild(s);
   }
-  function URL_create(b) { return window.URL.createObjectURL(b); }
-  function URL_revoke(u) { try { window.URL.revokeObjectURL(u); } catch (e) {} }
-
-  // Clean ?code= out of the address bar after Google returns.
   sb.auth.onAuthStateChange(function (ev, session) {
-    if (session && /[?&]code=/.test(location.search)) history.replaceState(null, '', location.pathname);
+    if (session && /[?&]code=/.test(location.search)) history.replaceState(null, '', location.pathname + location.hash);
     if (ev === 'SIGNED_OUT') { if (!rejected) location.reload(); return; }
     setTimeout(function () { boot(session); }, 0);   // never call Supabase inside this callback directly
   });
-  sb.auth.getSession().then(function (r) {
-    if (r.error && /[?&]error/.test(location.search)) say('Sign-in was not completed.', true);
-    boot(r.data && r.data.session);
-  });
+  sb.auth.getSession().then(function (r) { boot(r.data && r.data.session); });
   var q = new URLSearchParams(location.search);
   if (q.get('error_description')) { say('Only YDS accounts can sign in here.', true); history.replaceState(null, '', location.pathname); }
 })();
